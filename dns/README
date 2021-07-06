@@ -1,0 +1,8 @@
+#Comando para crear red en docker
+docker network create --subnet 172.20.0.0/16 red-contenedores
+docker network inspect red-contenedores
+
+#Usar la imagen
+docker build -t dns:1.0 .
+docker run -d --name dnserver --net red-contenedores --publish 53:53/udp --publish 53:53/tcp -it dns:1.0
+ 

@@ -1,0 +1,8 @@
+zone "torrejas.com" {
+    type master;
+    file "/etc/bind/db.torrejas.com";
+};
+zone "riguas.com" {
+    type master;
+    file "/etc/bind/db.riguas.com";
+};
