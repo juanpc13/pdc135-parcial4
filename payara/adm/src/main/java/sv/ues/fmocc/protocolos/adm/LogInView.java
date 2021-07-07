@@ -7,6 +7,10 @@ package sv.ues.fmocc.protocolos.adm;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +40,7 @@ public class LogInView implements Serializable {
     private SingleLDAP singleLDAP;
 
     private Properties properties;
+    private String localIp;
 
     @PostConstruct
     public void init() {
@@ -43,6 +48,19 @@ public class LogInView implements Serializable {
         properties = new Properties();
         try {
             properties.load(FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/WEB-INF/adm.properties"));
+
+            Enumeration en = NetworkInterface.getNetworkInterfaces();
+            while (en.hasMoreElements()) {
+                NetworkInterface i = (NetworkInterface) en.nextElement();
+                for (Enumeration en2 = i.getInetAddresses(); en2.hasMoreElements();) {
+                    InetAddress addr = (InetAddress) en2.nextElement();
+                    if (!addr.isLoopbackAddress()) {
+                        if (addr instanceof Inet4Address) {
+                            localIp = addr.toString();
+                        }
+                    }
+                }
+            }
         } catch (IOException ex) {
             Logger.getLogger(AdmView.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -56,8 +74,16 @@ public class LogInView implements Serializable {
         this.user = user;
     }
 
+    public String getLocalIp() {
+        return localIp;
+    }
+
+    public void setLocalIp(String localIp) {
+        this.localIp = localIp;
+    }
+
     public void iniciarSesion() {
-        if(properties == null){
+        if (properties == null) {
             addMessage(FacesMessage.SEVERITY_INFO, "No se han definido propiedades del proyecto", "");
             return;
         }

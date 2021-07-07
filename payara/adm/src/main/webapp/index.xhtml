@@ -13,6 +13,7 @@
             <p:growl id="msgs" showDetail="true" skipDetailIfEqualsSummary="true"/>
             <h:form>
                 <div class="card">
+                    <h4>Instancia IP:<h:outputText value="#{admView.localIp}"/></h4>
                     <p:tabView id="tabView" activeIndex="1">
                         <p:ajax event="tabChange" listener="#{admView.cargarUsuarios}" update="tablaUsuarios" />
                         <p:tab>
