@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <ui:composition template="layout.xhtml">
+
+        <ui:define name="title">Usuarios</ui:define>
+        <ui:define name="body">
+            <p:growl id="msgs" showDetail="true" skipDetailIfEqualsSummary="true"/>
+            <h:form>
+                <div class="card">
+                    <p:tabView id="tabView" activeIndex="1">
+                        <p:ajax event="tabChange" listener="#{admView.cargarUsuarios}" update="tablaUsuarios" />
+                        <p:tab>
+                            <f:facet name="title">
+                                <h:outputText value="Usuarios"/>
+                                <i class="pi pi-users"></i>
+                            </f:facet>
+                            <h:panelGrid>
+                                
+                                <p:dataTable id="tablaUsuarios" var="usuario" value="#{admView.usuarios}">
+                                    <p:column headerText="UID">
+                                        <h:outputText value="#{usuario.uid}" />
+                                    </p:column>
+                                    
+                                    <p:column headerText="Correo">
+                                        <h:outputText value="#{usuario.mail}" />
+                                    </p:column>
+
+                                    <p:column headerText="Nombre">
+                                        <h:outputText value="#{usuario.cn}" />
+                                    </p:column>
+
+                                    <p:column headerText="Apellido">
+                                        <h:outputText value="#{usuario.sn}" />
+                                    </p:column>
+
+                                    <p:column style="width:3rem;text-align: center">
+                                        <p:commandButton update="" oncomplete="PF('dialogDatosUsuario').show()" icon="pi pi-info-circle" title="Editar">
+                                            <f:setPropertyActionListener value="#{usuario}" target="#{admView.selectedUsuario}"/>
+                                        </p:commandButton>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGrid>
+                        </p:tab>                        
+                        <p:tab>
+                            <f:facet name="title">
+                                <h:outputText value="Registrar"/>
+                                <i class="pi pi-upload"></i>
+                            </f:facet>
+                            <h:panelGrid id="panelGrid">
+                                <div class="p-field p-grid">
+                                    <label for="nombre" class="p-col-fixed" style="width:100px;">Nombres</label>
+                                    <div class="p-col">
+                                        <p:inputText id="nombre" required="true" value="#{admView.user.cn}" style="width:33vw" placeholder="Ingrese los nombres" type="text" maxlength="50" validatorMessage="Sin Nombres">
+                                            <p:keyFilter regEx="/[a-zA-Z]/i"/>
+                                            <p:ajax event="keyup" listener="#{admView.updateUID}" update="uid, mail, mailbox, homeDirectory"/>
+                                        </p:inputText>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="p-field p-grid">
+                                    <label for="apellido" class="p-col-fixed" style="width:100px">Apellidos</label>
+                                    <div class="p-col">
+                                        <p:inputText id="apellido" required="true" value="#{admView.user.sn}" style="width:33vw" placeholder="Ingrese los apellidos" type="text" maxlength="50">
+                                            <p:keyFilter regEx="/[a-zA-Z]/i"/>
+                                            <p:ajax event="keyup" listener="#{admView.updateUID}" update="uid, mail, mailbox, homeDirectory"/>
+                                        </p:inputText>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="p-field p-grid">
+                                    <label for="uid" class="p-col-fixed" style="width:100px">UID</label>
+                                    <div class="p-col">
+                                        <p:inputText id="uid" required="true" value="#{admView.user.uid}" style="width:33vw" placeholder="Ingrese el uid o usuario" type="text" maxlength="50" autocomplete="off">
+                                            <p:ajax event="keyup" listener="#{admView.updateUSER}" update="mail, mailbox, homeDirectory"/>
+                                            <p:keyFilter regEx="/[a-zA-Z.0-9]/i"/>
+                                        </p:inputText>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="p-field p-grid">
+                                    <label for="mail" class="p-col-fixed" style="width:100px">Correo:</label>
+                                    <div class="p-col">
+                                        <p:inputText id="mail" disabled="true" value="#{admView.user.mail}" style="width:33vw" placeholder="Campo Mail" type="text" maxlength="50" autocomplete="off"/>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="p-field p-grid">
+                                    <label for="password" class="p-col-fixed" style="width:100px">Contraseña</label>
+                                    <div class="p-col">
+                                        <p:password id="password" required="true" value="#{admView.user.userPassword}" style="width:33vw" placeholder="Ingrese la contraseña" maxlength="50"/>
+                                    </div>
+                                </div>
+                                <br/>                                
+                                <div class="p-field p-grid">
+                                    <label for="mailbox" class="p-col-fixed" style="width:100px">Mailbox</label>
+                                    <div class="p-col">
+                                        <p:inputText id="mailbox" disabled="true" value="#{admView.user.mailbox}" style="width:33vw" placeholder="Mailbox" type="text" maxlength="50" autocomplete="off"/>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="p-field p-grid">
+                                    <label for="homeDirectory" class="p-col-fixed" style="width:100px">Home Directory</label>
+                                    <div class="p-col">
+                                        <p:inputText id="homeDirectory" disabled="true" value="#{admView.user.homeDirectory}" style="width:33vw" placeholder="Home Directory" type="text" maxlength="50" autocomplete="off"/>
+                                    </div>
+                                </div>
+                                <br/>
+                                <p:commandButton value="Guardar" update="msgs, panelGrid" actionListener="#{admView.crearUsuario}"/>
+                            </h:panelGrid>
+                        </p:tab>
+                    </p:tabView>
+                </div>
+                
+                <p:dialog header="Editar Usuario" widgetVar="dialogDatosUsuario" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                              
+                </p:dialog>
+            </h:form>
+        </ui:define>
+
+    </ui:composition>
+</html>
+
