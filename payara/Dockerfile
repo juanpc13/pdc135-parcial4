@@ -1,9 +1,6 @@
 # Obtener imagen de debian
-FROM payara/server-full:latest
+FROM payara/micro:latest
 
-# Actualizar e instalar wget
-USER root
-RUN apt update && apt install -y wget
 USER payara
 
 # Se instala maven
@@ -18,6 +15,6 @@ RUN $HOME_DIR/apache-maven-3.8.1/bin/mvn clean install -f $HOME_DIR/adm
 # Se mueve de carpeta
 RUN mv $HOME_DIR/adm/target/adm-1.0-SNAPSHOT.war $HOME_DIR/deployments/adm.war
 
-ENTRYPOINT ["/tini","--"]
-CMD ["/bin/sh","-c","\"${SCRIPT_DIR}/entrypoint.sh\""]
+ENTRYPOINT ["/bin/sh","entrypoint.sh"]
+CMD ["--deploymentDir","/opt/payara/deployments"]
 
