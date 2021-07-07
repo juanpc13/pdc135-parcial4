@@ -10,11 +10,16 @@
 
         <ui:define name="title">Usuarios</ui:define>
         <ui:define name="body">
-            <p:growl id="msgs" showDetail="true" skipDetailIfEqualsSummary="true"/>
-            <h:form>
+
+            <p:growl id="msgs" showDetail="true" skipDetailIfEqualsSummary="true"/>            
+
+            <h:form id="form">
+                
+                <p:remoteCommand name="onloadCargarTabla" process="@this" update="msgs, form:tabView:tablaUsuarios" autoRun="true" action="#{admView.cargarUsuarios}"/>
+                
                 <div class="card">
                     <h4>Instancia IP:<h:outputText value="#{admView.localIp}"/></h4>
-                    <p:tabView id="tabView" activeIndex="1">
+                    <p:tabView id="tabView">
                         <p:ajax event="tabChange" listener="#{admView.cargarUsuarios}" update="tablaUsuarios" />
                         <p:tab>
                             <f:facet name="title">
@@ -26,7 +31,7 @@
                                     <p:column headerText="UID">
                                         <h:outputText value="#{usuario.uid}" />
                                     </p:column>
-                                    
+
                                     <p:column headerText="Correo">
                                         <h:outputText value="#{usuario.mail}" />
                                     </p:column>
@@ -58,7 +63,7 @@
                                     <div class="p-col">
                                         <p:inputText id="nombre" required="true" value="#{admView.user.cn}" style="width:33vw" placeholder="Ingrese los nombres" type="text" maxlength="50" validatorMessage="Sin Nombres">
                                             <p:keyFilter regEx="/[a-zA-Z]/i"/>
-                                            <p:ajax event="keyup" listener="#{admView.updateUID}" update="uid, mail, mailbox, homeDirectory"/>
+                                            <p:ajax event="change" listener="#{admView.updateUID}" update="uid, mail, mailbox, homeDirectory"/>
                                         </p:inputText>
                                     </div>
                                 </div>
@@ -68,7 +73,7 @@
                                     <div class="p-col">
                                         <p:inputText id="apellido" required="true" value="#{admView.user.sn}" style="width:33vw" placeholder="Ingrese los apellidos" type="text" maxlength="50">
                                             <p:keyFilter regEx="/[a-zA-Z]/i"/>
-                                            <p:ajax event="keyup" listener="#{admView.updateUID}" update="uid, mail, mailbox, homeDirectory"/>
+                                            <p:ajax event="change" listener="#{admView.updateUID}" update="uid, mail, mailbox, homeDirectory"/>
                                         </p:inputText>
                                     </div>
                                 </div>
@@ -77,7 +82,7 @@
                                     <label for="uid" class="p-col-fixed" style="width:100px">UID</label>
                                     <div class="p-col">
                                         <p:inputText id="uid" required="true" value="#{admView.user.uid}" style="width:33vw" placeholder="Ingrese el uid o usuario" type="text" maxlength="50" autocomplete="off">
-                                            <p:ajax event="keyup" listener="#{admView.updateUSER}" update="mail, mailbox, homeDirectory"/>
+                                            <p:ajax event="change" listener="#{admView.updateUSER}" update="mail, mailbox, homeDirectory"/>
                                             <p:keyFilter regEx="/[a-zA-Z.0-9]/i"/>
                                         </p:inputText>
                                     </div>
@@ -116,9 +121,9 @@
                         </p:tab>
                     </p:tabView>
                 </div>
-                
+
                 <p:dialog header="Editar Usuario" widgetVar="dialogDatosUsuario" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-                              
+
                 </p:dialog>
             </h:form>
         </ui:define>

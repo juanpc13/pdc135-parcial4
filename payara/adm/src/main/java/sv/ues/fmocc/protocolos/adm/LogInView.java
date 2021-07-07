@@ -48,20 +48,14 @@ public class LogInView implements Serializable {
     }
 
     public Properties getProperties() {
-        properties = null;
         try {
             InputStream input = new FileInputStream(System.getProperty("user.home") + "/adm.properties");
+            //properties.load(FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/WEB-INF/adm.properties"));
             properties = new Properties();
             properties.load(input);
             localIp = InetAddress.getLocalHost().toString();
         } catch (IOException ex) {
-            //Logger.getLogger(LogInView.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("Se cargan WEB-INF/adm.properties");
-            try {
-                properties.load(FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/WEB-INF/adm.properties"));
-            } catch (IOException ex1) {
-                Logger.getLogger(LogInView.class.getName()).log(Level.SEVERE, null, ex1);
-            }
+            Logger.getLogger(LogInView.class.getName()).log(Level.SEVERE, null, ex);
         }
         return properties;
     }
@@ -98,8 +92,6 @@ public class LogInView implements Serializable {
             session.setAttribute("userPassword", user.getUserPassword());
             redirect("/index.xhtml");
             singleLDAP.getContext().close();
-            user = new UserLDAP();
-
         } catch (NamingException ex) {
             if (ex instanceof CommunicationException) {
                 Logger.getLogger(LogInView.class.getName()).log(Level.SEVERE, null, ex);

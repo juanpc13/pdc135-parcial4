@@ -5,7 +5,9 @@
  */
 package sv.ues.fmocc.protocolos.adm;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -51,17 +53,23 @@ public class AdmView implements Serializable {
     @PostConstruct
     public void init() {
         user = new UserLDAP();
+        updateUSER();
         usuarios = new ArrayList<>();
         // Se cargan las propiedades del proyecto
-        properties = new Properties();
+        properties = getProperties();
+    }
+    
+    public Properties getProperties() {
         try {
-            properties.load(FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/WEB-INF/adm.properties"));
-            cargarUsuarios();
-            
+            InputStream input = new FileInputStream(System.getProperty("user.home") + "/adm.properties");
+            //properties.load(FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/WEB-INF/adm.properties"));
+            properties = new Properties();
+            properties.load(input);
             localIp = InetAddress.getLocalHost().toString();
         } catch (IOException ex) {
-            Logger.getLogger(AdmView.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LogInView.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return properties;
     }
 
     public UserLDAP getUser() {
@@ -131,6 +139,7 @@ public class AdmView implements Serializable {
                 singleLDAP.getContext().close();
                 addMessage(FacesMessage.SEVERITY_INFO, "Correo creado", "");
                 user = new UserLDAP();
+                cargarUsuarios();
             } catch (NamingException ex) {
                 if (ex instanceof NameAlreadyBoundException) {
                     //Logger.getLogger(AdmView.class.getName()).log(Level.SEVERE, null, ex);
