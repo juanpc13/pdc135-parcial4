@@ -60,18 +60,7 @@ public class AdmView implements Serializable {
             properties.load(FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/WEB-INF/adm.properties"));
             cargarUsuarios();
             
-            Enumeration en = NetworkInterface.getNetworkInterfaces();
-            while (en.hasMoreElements()) {
-                NetworkInterface i = (NetworkInterface) en.nextElement();
-                for (Enumeration en2 = i.getInetAddresses(); en2.hasMoreElements();) {
-                    InetAddress addr = (InetAddress) en2.nextElement();
-                    if (!addr.isLoopbackAddress()) {
-                        if (addr instanceof Inet4Address) {
-                            localIp = addr.toString();
-                        }
-                    }
-                }
-            }
+            localIp = InetAddress.getLocalHost().toString();
         } catch (IOException ex) {
             Logger.getLogger(AdmView.class.getName()).log(Level.SEVERE, null, ex);
         }
