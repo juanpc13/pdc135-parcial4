@@ -5,7 +5,6 @@
  */
 package sv.ues.fmocc.protocolos.adm.utils;
 
-import java.io.IOException;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

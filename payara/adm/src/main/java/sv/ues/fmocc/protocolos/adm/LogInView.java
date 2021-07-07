@@ -5,12 +5,11 @@
  */
 package sv.ues.fmocc.protocolos.adm;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
-import java.net.Inet4Address;
 import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,14 +44,26 @@ public class LogInView implements Serializable {
     @PostConstruct
     public void init() {
         user = new UserLDAP();
-        properties = new Properties();
-        try {
-            properties.load(FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/WEB-INF/adm.properties"));
+        properties = getProperties();
+    }
 
+    public Properties getProperties() {
+        properties = null;
+        try {
+            InputStream input = new FileInputStream(System.getProperty("user.home") + "/adm.properties");
+            properties = new Properties();
+            properties.load(input);
             localIp = InetAddress.getLocalHost().toString();
         } catch (IOException ex) {
-            Logger.getLogger(AdmView.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(LogInView.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Se cargan WEB-INF/adm.properties");
+            try {
+                properties.load(FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/WEB-INF/adm.properties"));
+            } catch (IOException ex1) {
+                Logger.getLogger(LogInView.class.getName()).log(Level.SEVERE, null, ex1);
+            }
         }
+        return properties;
     }
 
     public UserLDAP getUser() {
@@ -77,7 +88,7 @@ public class LogInView implements Serializable {
             return;
         }
         //Se agrega el DN completo del user admin de la sesion
-        user.dn(properties.getProperty("admDN").replace("$CN", user.getCn()));//"cn=admin,dc=atol,dc=com"
+        user.dn(properties.getProperty("adm.dn").replace("$CN", user.getCn()));//"cn=admin,dc=atol,dc=com"
 
         try {
             //Si no genera instancias de excepciones es las credenciales son correctas

@@ -7,11 +7,8 @@ package sv.ues.fmocc.protocolos.adm;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.Inet4Address;
 import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -30,6 +27,7 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.InvalidAttributeValueException;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
+import javax.servlet.http.HttpSession;
 import sv.ues.fmocc.protocolos.adm.entity.UserLDAP;
 import sv.ues.fmocc.protocolos.adm.utils.SessionUtils;
 import sv.ues.fmocc.protocolos.adm.utils.SingleLDAP;
@@ -115,9 +113,9 @@ public class AdmView implements Serializable {
             return;
         }
         // Dependen del UID y de las propiedades definidas
-        user.setHomeDirectory(properties.getProperty("homeDirectory").replace("$UID", user.getUid()));
-        user.setMail(properties.getProperty("mail").replace("$UID", user.getUid()));
-        user.setMailbox(properties.getProperty("mailbox").replace("$UID", user.getUid()));
+        user.setHomeDirectory(properties.getProperty("default.homeDirectory").replace("$UID", user.getUid()));
+        user.setMail(properties.getProperty("default.mail").replace("$UID", user.getUid()));
+        user.setMailbox(properties.getProperty("default.mailbox").replace("$UID", user.getUid()));
     }
 
     public void crearUsuario() {
@@ -129,9 +127,10 @@ public class AdmView implements Serializable {
             Attributes attributes = user.generateAttributes();
             try {
                 singleLDAP = new SingleLDAP(properties, SessionUtils.getUserUserDn(), SessionUtils.getUserPassword());
-                singleLDAP.getContext().createSubcontext(properties.getProperty("crearUsuario").replace("$UID", user.getUid()), attributes);
+                singleLDAP.getContext().createSubcontext(properties.getProperty("usuarios.create").replace("$UID", user.getUid()), attributes);
                 singleLDAP.getContext().close();
                 addMessage(FacesMessage.SEVERITY_INFO, "Correo creado", "");
+                user = new UserLDAP();
             } catch (NamingException ex) {
                 if (ex instanceof NameAlreadyBoundException) {
                     //Logger.getLogger(AdmView.class.getName()).log(Level.SEVERE, null, ex);
@@ -164,7 +163,7 @@ public class AdmView implements Serializable {
             addMessage(FacesMessage.SEVERITY_INFO, "No se han definido propiedades del proyecto", "");
             return;
         }
-        String searchFilter = properties.getProperty("filtroUsuarios");
+        String searchFilter = properties.getProperty("usuarios.filtro");
         //String[] reqAtt = {"mail", "mailbox"};
         String[] reqAtt = user.fieldsList();
         SearchControls controls = new SearchControls();
@@ -173,7 +172,7 @@ public class AdmView implements Serializable {
 
         try {
             singleLDAP = new SingleLDAP(properties, SessionUtils.getUserUserDn(), SessionUtils.getUserPassword());
-            NamingEnumeration users = singleLDAP.getContext().search(properties.getProperty("usuariosDN"), searchFilter, controls);
+            NamingEnumeration users = singleLDAP.getContext().search(properties.getProperty("usuarios.dn"), searchFilter, controls);
             singleLDAP.getContext().close();
 
             SearchResult result = null;
@@ -203,6 +202,12 @@ public class AdmView implements Serializable {
 
     public void addMessage(FacesMessage.Severity severity, String summary, String detail) {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(severity, summary, detail));
+    }
+    
+    public String logout() {
+        HttpSession session = SessionUtils.getSession();
+        session.invalidate();
+        return "login";
     }
 
 }

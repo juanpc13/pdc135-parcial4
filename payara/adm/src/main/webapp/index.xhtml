@@ -22,7 +22,6 @@
                                 <i class="pi pi-users"></i>
                             </f:facet>
                             <h:panelGrid>
-                                
                                 <p:dataTable id="tablaUsuarios" var="usuario" value="#{admView.usuarios}">
                                     <p:column headerText="UID">
                                         <h:outputText value="#{usuario.uid}" />
@@ -55,7 +54,7 @@
                             </f:facet>
                             <h:panelGrid id="panelGrid">
                                 <div class="p-field p-grid">
-                                    <label for="nombre" class="p-col-fixed" style="width:100px;">Nombres</label>
+                                    <label for="nombre" class="p-col-fixed" style="width:100px;">Nombre</label>
                                     <div class="p-col">
                                         <p:inputText id="nombre" required="true" value="#{admView.user.cn}" style="width:33vw" placeholder="Ingrese los nombres" type="text" maxlength="50" validatorMessage="Sin Nombres">
                                             <p:keyFilter regEx="/[a-zA-Z]/i"/>
@@ -65,7 +64,7 @@
                                 </div>
                                 <br/>
                                 <div class="p-field p-grid">
-                                    <label for="apellido" class="p-col-fixed" style="width:100px">Apellidos</label>
+                                    <label for="apellido" class="p-col-fixed" style="width:100px">Apellido</label>
                                     <div class="p-col">
                                         <p:inputText id="apellido" required="true" value="#{admView.user.sn}" style="width:33vw" placeholder="Ingrese los apellidos" type="text" maxlength="50">
                                             <p:keyFilter regEx="/[a-zA-Z]/i"/>
