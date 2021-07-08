@@ -1,7 +1,3 @@
-#Comando para crear red en docker
-docker network create --subnet 172.20.0.0/16 red-contenedores
-docker network inspect red-contenedores
-
 #Usar la imagen
 docker build -t payara-adm:1.0 .
-docker run -d --name payara-adm --net red-contenedores --publish 80:8080/tcp --publish 48:4848/tcp -it payara-adm:1.0
+docker run -d --name payara-adm -p 80:8080 -p 48:4848 -e dominio=atol -e ldap_url=ldap://192.168.122.68:389 -it payara-adm:1.0
