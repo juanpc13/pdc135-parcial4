@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -156,7 +157,7 @@ public class AdmView implements Serializable {
                 } else if (ex instanceof AuthenticationException) {
                     //Logger.getLogger(AdmView.class.getName()).log(Level.SEVERE, null, ex);
                     addMessage(FacesMessage.SEVERITY_ERROR, "Credenciales Invalidas", "");
-
+                    redirect("/login.xhtml");
                 } else {
                     Logger.getLogger(AdmView.class.getName()).log(Level.SEVERE, null, ex);
                     addMessage(FacesMessage.SEVERITY_ERROR, "Error no definido", "");
@@ -217,6 +218,15 @@ public class AdmView implements Serializable {
         HttpSession session = SessionUtils.getSession();
         session.invalidate();
         return "login";
+    }
+    
+    public void redirect(String url) {
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        try {
+            context.redirect(context.getRequestContextPath() + url);
+        } catch (IOException ex) {
+            Logger.getLogger(this.getClass().getSimpleName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }
