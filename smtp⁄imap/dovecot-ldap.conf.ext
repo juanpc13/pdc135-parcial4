@@ -1,0 +1,17 @@
+hosts = 192.168.255.14:389
+dn = cn=admin,dc=torrejas,dc=com
+dnpass = abc123
+auth_bind = yes
+auth_bind_userdn = uid=%u,ou=usuarios,dc=torrejas,dc=com
+base = ou=usuarios,dc=torrejas,dc=com
+debug_level = 1
+ldap_version = 3
+deref = always
+scope = subtree
+#user_attrs = mailbox=mail=maildir:/home/vmail/%$,homeDirectory=home
+user_attrs = homeDirectory=home,mailbox=mail=maildir:/home/vmail/%$
+#user_filter = (&(objectClass=CourierMailAccount)(mail=%u))
+user_filter = (&(objectClass=CourierMailAccount)(uid=%n))
+pass_attrs = uid=mail,userPassword=password
+#pass_filter = (&(objectClass=CourierMailAccount)(mail=%u))
+pass_filter = (&(objectClass=CourierMailAccount)(uid=%n))

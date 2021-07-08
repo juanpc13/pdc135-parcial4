@@ -1,0 +1,17 @@
+docker cp condescending_colden:/etc/postfix/main.cf
+docker cp condescending_colden:/etc/postfix/vhosts.txt
+docker cp condescending_colden:/etc/postfix/ldap-maps.cf
+1926  docker cp condescending_colden:/etc/postfix/master.cf .
+ 1927  docker cp condescending_colden:/etc/dovecot/dovecot.conf .
+ 1928  docker cp condescending_colden:/etc/dovecot/dovecot-ldap.conf.ext .
+ 1929  docker cp condescending_colden:/etc/dovecot/conf.d/auth-system.conf.ext .
+ 1930  docker cp condescending_colden:/etc/dovecot/conf.d/auth-checkpassword.conf.ext .
+ 1931  docker cp condescending_colden:/etc/dovecot/conf.d/auth-static.conf.ext .
+ 1932  docker cp condescending_colden:/etc/dovecot/conf.d/auth-master.conf.ext .
+ 1933  docker cp condescending_colden:/etc/dovecot/conf.d/auth-ldap.conf.ext .
+ 1934  docker cp condescending_colden:/etc/dovecot/conf.d/10-auth.conf .
+ 1935  docker cp condescending_colden:/etc/dovecot/conf.d/15-lda.conf .
+ 1936  docker cp condescending_colden:/etc/postfix/main.cf .
+ 1937  docker cp condescending_colden:/etc/postfix/master.cf .
+ 1938  docker cp condescending_colden:/etc/dovecot/dovecot.conf .
+ 1939  docker cp condescending_colden:/etc/dovecot/conf.d/10-master.conf .

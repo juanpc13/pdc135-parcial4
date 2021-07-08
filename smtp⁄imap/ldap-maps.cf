@@ -1,0 +1,8 @@
+server_host = 192.168.255.14:389
+search_base = ou=usuarios,dc=torrejas,dc=com
+bind = yes
+bind_dn = cn=admin,dc=torrejas,dc=com
+bind_pw = abc123
+timeout = 2
+query_filter=mail=%u@torrejas.com
+result_attribute = mailbox
